@@ -1,0 +1,9 @@
+venv
+build
+__pycache__
+*.pyc
+.DS_Store
+.idea
+*.exe
+*.so
+backend.cpython-313-x86_64-linux-gnu.so

@@ -1,0 +1,42 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "Linux",
+      "compilerPath": "/usr/bin/g++",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "linux-gcc-x64",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "/usr/include/c++/15", // GCC standard library
+        "/usr/include/x86_64-linux-gnu/c++/15",
+        "/usr/include"
+      ]
+    },
+    {
+      "name": "Windows",
+      "compilerPath": "C:/MinGW/bin/g++.exe",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "windows-gcc-x64",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "C:/MinGW/lib/gcc/mingw32/12.2.0/include/c++", // adjust for your GCC version
+        "C:/MinGW/include"
+      ]
+    },
+    {
+      "name": "macOS",
+      "compilerPath": "/usr/bin/clang++",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "macos-clang-x64",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "/usr/include/c++/v1",
+        "/usr/local/include"
+      ]
+    }
+  ]
+}
