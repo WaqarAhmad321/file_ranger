@@ -18,7 +18,6 @@ try:
     import backend
 except ImportError:
     print("❌ Error: 'backend' module not found.")
-    print("   Make sure compiled the C++ code and copied the .so file to this directory.")
     sys.exit(1)
 
 class StatusBar(Static):
@@ -125,9 +124,9 @@ class FileManagerApp(App):
         ("l", "select_item", "Enter"),
         ("h", "go_back", "Back"),
         ("enter", "select_item", "Enter"),
-        ("left", "go_back", "Back"),   # Added Left Arrow
-        ("right", "select_item", "Enter"), # Added Right Arrow
-        ("L", "go_forward", "Forward"), # Shift+Right or L
+        ("left", "go_back", "Back"),   
+        ("right", "select_item", "Enter"), 
+        ("L", "go_forward", "Forward"),
         ("d", "delete_item", "Delete"),
         ("r", "rename_item", "Rename"),
         ("n", "new_file", "New File"),
@@ -142,7 +141,6 @@ class FileManagerApp(App):
     # Track the folder we just exited to highlight it in the parent view
     last_exited_path = None
     
-    # Clipboard for copy/paste
     clipboard_path = None
 
     def compose(self) -> ComposeResult:

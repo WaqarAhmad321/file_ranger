@@ -16,11 +16,6 @@ using std::unique_ptr;
 using std::shared_ptr;
 using std::make_shared;
 
-// -------------------------
-// Manual Merge Sort Implementation
-// -------------------------
-
-// Helper function to convert string to lowercase for case-insensitive comparison
 string to_lower(const string& s) {
     string result;
     result.reserve(s.size());
@@ -32,24 +27,20 @@ string to_lower(const string& s) {
 
 // Comparator function: directories first, then case-insensitive alphabetical
 bool compare_nodes(const shared_ptr<FileNode>& a, const shared_ptr<FileNode>& b) {
-    // Primary criterion: directories before files
     if (a->is_directory != b->is_directory) {
         return a->is_directory && !b->is_directory;
     }
-    // Secondary criterion: case-insensitive name comparison
     return to_lower(a->name) < to_lower(b->name);
 }
 
-// Merge function: merges two sorted halves
+// Merges two sorted halves
 void merge(vector<shared_ptr<FileNode>>& arr, int left, int mid, int right) {
     int n1 = mid - left + 1;
     int n2 = right - mid;
 
-    // Create temporary vectors
     vector<shared_ptr<FileNode>> leftArr(n1);
     vector<shared_ptr<FileNode>> rightArr(n2);
 
-    // Copy data to temporary vectors
     for (int i = 0; i < n1; i++) {
         leftArr[i] = arr[left + i];
     }
@@ -57,10 +48,9 @@ void merge(vector<shared_ptr<FileNode>>& arr, int left, int mid, int right) {
         rightArr[j] = arr[mid + 1 + j];
     }
 
-    // Merge the temporary vectors back into arr[left..right]
-    int i = 0;    // Initial index of left subarray
-    int j = 0;    // Initial index of right subarray
-    int k = left; // Initial index of merged subarray
+    int i = 0;    
+    int j = 0;    
+    int k = left;
 
     while (i < n1 && j < n2) {
         if (compare_nodes(leftArr[i], rightArr[j])) {
@@ -73,14 +63,12 @@ void merge(vector<shared_ptr<FileNode>>& arr, int left, int mid, int right) {
         k++;
     }
 
-    // Copy remaining elements of leftArr[], if any
     while (i < n1) {
         arr[k] = leftArr[i];
         i++;
         k++;
     }
 
-    // Copy remaining elements of rightArr[], if any
     while (j < n2) {
         arr[k] = rightArr[j];
         j++;
@@ -88,10 +76,9 @@ void merge(vector<shared_ptr<FileNode>>& arr, int left, int mid, int right) {
     }
 }
 
-// Merge Sort function (recursive)
+// Merge Sort function
 void merge_sort(vector<shared_ptr<FileNode>>& arr, int left, int right) {
     if (left < right) {
-        // Find the middle point
         int mid = left + (right - left) / 2;
 
         // Recursively sort first and second halves
@@ -110,9 +97,6 @@ void sort_file_nodes(vector<shared_ptr<FileNode>>& nodes) {
     }
 }
 
-// -------------------------
-// Directory Listing
-// -------------------------
 
 shared_ptr<FileNode> list_directory(const string& dir_path) {
     auto node = make_shared<FileNode>();
@@ -138,16 +122,14 @@ shared_ptr<FileNode> list_directory(const string& dir_path) {
             node->children.push_back(child_node);
         }
         
-        // Sort children using manual merge sort implementation
         sort_file_nodes(node->children);
     }
 
-    return node; // directly return the shared_ptr
+    return node;
 }
 
-// -------------------------
-// File operations (used by Python UI)
-// -------------------------
+
+
 
 bool make_directory_recursive(const string& dir_path) {
     try {
