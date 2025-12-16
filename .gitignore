@@ -7,3 +7,4 @@ __pycache__
 *.exe
 *.so
 backend.cpython-313-x86_64-linux-gnu.so
+dist

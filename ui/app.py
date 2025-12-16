@@ -18,7 +18,7 @@ try:
     import backend
 except ImportError:
     print("❌ Error: 'backend' module not found.")
-    print("   Make sure you compiled the C++ code and copied the .so file to this directory.")
+    print("   Make sure compiled the C++ code and copied the .so file to this directory.")
     sys.exit(1)
 
 class StatusBar(Static):
@@ -72,10 +72,10 @@ class FileManagerApp(App):
 
     /* OptionList Styling */
     OptionList {
-        background: transparent;
+        background: #3e3e3e;
         border: none;
         scrollbar-gutter: stable;
-        color: #ccc;
+        color: #000;
     }
     
     OptionList:focus {

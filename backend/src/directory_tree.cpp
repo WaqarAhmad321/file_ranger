@@ -16,6 +16,104 @@ using std::unique_ptr;
 using std::shared_ptr;
 using std::make_shared;
 
+// -------------------------
+// Manual Merge Sort Implementation
+// -------------------------
+
+// Helper function to convert string to lowercase for case-insensitive comparison
+string to_lower(const string& s) {
+    string result;
+    result.reserve(s.size());
+    for (unsigned char c : s) {
+        result.push_back(std::tolower(c));
+    }
+    return result;
+}
+
+// Comparator function: directories first, then case-insensitive alphabetical
+bool compare_nodes(const shared_ptr<FileNode>& a, const shared_ptr<FileNode>& b) {
+    // Primary criterion: directories before files
+    if (a->is_directory != b->is_directory) {
+        return a->is_directory && !b->is_directory;
+    }
+    // Secondary criterion: case-insensitive name comparison
+    return to_lower(a->name) < to_lower(b->name);
+}
+
+// Merge function: merges two sorted halves
+void merge(vector<shared_ptr<FileNode>>& arr, int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    // Create temporary vectors
+    vector<shared_ptr<FileNode>> leftArr(n1);
+    vector<shared_ptr<FileNode>> rightArr(n2);
+
+    // Copy data to temporary vectors
+    for (int i = 0; i < n1; i++) {
+        leftArr[i] = arr[left + i];
+    }
+    for (int j = 0; j < n2; j++) {
+        rightArr[j] = arr[mid + 1 + j];
+    }
+
+    // Merge the temporary vectors back into arr[left..right]
+    int i = 0;    // Initial index of left subarray
+    int j = 0;    // Initial index of right subarray
+    int k = left; // Initial index of merged subarray
+
+    while (i < n1 && j < n2) {
+        if (compare_nodes(leftArr[i], rightArr[j])) {
+            arr[k] = leftArr[i];
+            i++;
+        } else {
+            arr[k] = rightArr[j];
+            j++;
+        }
+        k++;
+    }
+
+    // Copy remaining elements of leftArr[], if any
+    while (i < n1) {
+        arr[k] = leftArr[i];
+        i++;
+        k++;
+    }
+
+    // Copy remaining elements of rightArr[], if any
+    while (j < n2) {
+        arr[k] = rightArr[j];
+        j++;
+        k++;
+    }
+}
+
+// Merge Sort function (recursive)
+void merge_sort(vector<shared_ptr<FileNode>>& arr, int left, int right) {
+    if (left < right) {
+        // Find the middle point
+        int mid = left + (right - left) / 2;
+
+        // Recursively sort first and second halves
+        merge_sort(arr, left, mid);
+        merge_sort(arr, mid + 1, right);
+
+        // Merge the sorted halves
+        merge(arr, left, mid, right);
+    }
+}
+
+// Wrapper function to call merge sort
+void sort_file_nodes(vector<shared_ptr<FileNode>>& nodes) {
+    if (nodes.size() > 1) {
+        merge_sort(nodes, 0, nodes.size() - 1);
+    }
+}
+
+// -------------------------
+// Directory Listing
+// -------------------------
+
 shared_ptr<FileNode> list_directory(const string& dir_path) {
     auto node = make_shared<FileNode>();
     node->name = path(dir_path).filename().string();
@@ -39,24 +137,9 @@ shared_ptr<FileNode> list_directory(const string& dir_path) {
 
             node->children.push_back(child_node);
         }
-    }
-    // Sort children before returning (directories first, then case-insensitive by name)
-    try {
-        // comparator: directories first, then case-insensitive name
-        auto cmp = [](const shared_ptr<FileNode>& a, const shared_ptr<FileNode>& b) {
-            if (a->is_directory != b->is_directory) return a->is_directory && !b->is_directory;
-            // case-insensitive compare
-            auto to_lower = [](const string& s) {
-                string out; out.reserve(s.size());
-                for (unsigned char c: s) out.push_back(std::tolower(c));
-                return out;
-            };
-            return to_lower(a->name) < to_lower(b->name);
-        };
-
-        std::sort(node->children.begin(), node->children.end(), cmp);
-    } catch (const std::exception&) {
-        // ignore sort errors
+        
+        // Sort children using manual merge sort implementation
+        sort_file_nodes(node->children);
     }
 
     return node; // directly return the shared_ptr
